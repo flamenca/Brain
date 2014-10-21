@@ -11,7 +11,7 @@ public:
 
     static bool OpenDB();
     static bool CloseDB();
-    static bool ShowTable(QString sql , QTableView *view);
+    static bool ShowTable(QString sql , QSqlTableModel *model);
 private:
     static QSqlDatabase mydb;
 

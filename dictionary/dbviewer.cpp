@@ -3,16 +3,25 @@
 #include "dbcontroler.h"
 
 DBViewer::DBViewer(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::DBViewer)
+    QWidget(parent)
 {
-    ui->setupUi(this);
     DBControler::OpenDB();
-    DBControler::ShowTable("", ui->tableView );
+
+    dbview = new QTableView(this);
+    model = new QSqlTableModel;
+
+    dbview->setGeometry(0,0,APP_WIDTH,APP_HEIGHT);
+    dbview->setModel(model);
+
+    setGeometry(0,APP_TOOLBAR_WIDTH,APP_WIDTH,APP_HEIGHT);
 }
 
 DBViewer::~DBViewer()
 {
     DBControler::CloseDB();
-    delete ui;
+}
+
+void  DBViewer::OnOpen(){
+    DBControler::ShowTable("", model);
+    dbview->show();
 }

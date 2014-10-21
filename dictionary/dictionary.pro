@@ -21,5 +21,4 @@ HEADERS  += mainwindow.h \
     dbviewer.h \
     dbcontroler.h
 
-FORMS    += mainwindow.ui \
-    dbviewer.ui
+FORMS    += mainwindow.ui

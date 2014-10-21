@@ -17,9 +17,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-public slots:
-    void  OnOpen();
-
 private:
     Ui::MainWindow *ui;
     DBViewer *mydbview;
