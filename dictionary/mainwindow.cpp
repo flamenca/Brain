@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "prelearnwords.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -12,12 +13,23 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QAction * openAction = new QAction(tr("&Open..."), this);
     connect( openAction,SIGNAL( triggered()),mydbview,SLOT(OnOpen()) );
-
     ui->mainToolBar ->addAction(openAction);
+
+    QAction * listziAction = new QAction(tr("&Ci..."), this);
+    connect( listziAction,SIGNAL( triggered()),this,SLOT(OnListCi()) );
+    ui->mainToolBar ->addAction(listziAction);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void  MainWindow::OnInitZi(){
+    PreLearnWords::InitZi();
+}
+
+void  MainWindow::OnInitCi(){
+    PreLearnWords::InitCi();
 }
 

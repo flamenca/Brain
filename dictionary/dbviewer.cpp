@@ -1,5 +1,4 @@
 #include "dbviewer.h"
-#include "ui_dbviewer.h"
 #include "dbcontroler.h"
 
 DBViewer::DBViewer(QWidget *parent) :

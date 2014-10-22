@@ -15,10 +15,12 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     dbviewer.cpp \
-    dbcontroler.cpp
+    dbcontroler.cpp \
+    prelearnwords.cpp
 
 HEADERS  += mainwindow.h \
     dbviewer.h \
-    dbcontroler.h
+    dbcontroler.h \
+    prelearnwords.h
 
 FORMS    += mainwindow.ui

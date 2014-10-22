@@ -20,6 +20,10 @@ public:
 private:
     Ui::MainWindow *ui;
     DBViewer *mydbview;
+
+public slots:
+    void  OnInitZi();
+    void  OnInitCi();
 };
 
 #endif // MAINWINDOW_H
