@@ -1,6 +1,7 @@
 #ifndef PRELEARNWORDS_H
 #define PRELEARNWORDS_H
 
+//"◎ˉˊˇˋ●∶"
 class PreLearnWords
 {
 public:

@@ -7,8 +7,44 @@
 PreLearnWords::PreLearnWords()
 {
 }
-void PreLearnWords::InitCi(){
 
+void PreLearnWords::InitCi(){
+    char line[1024];
+    QFile fdic("dic_utf8.txt");
+
+    QString Zi;
+    QString ZiYin;
+
+    QString Ci;
+    QString CiYin;
+
+    if ( fdic.open( QIODevice::ReadOnly | QIODevice::Text ) ){
+        while( !fdic.atEnd() ){
+            memset((char *)line,0,1024);
+            fdic.readLine(line,1024);
+            QString str = QString::fromUtf8(line).trimmed();
+            QString pattern_zi("\\*(.*) ([abcdefghijklmnopqrstuvwxyzīíǐìāáǎàōóǒòūúǔùüǖǘǚǜēéěèńň,]*)笔划:(.*)部首:(.*)五笔输入法");
+            QString pattern_ci("^[abcdefghijklmnopqrstuvwxyzīíǐìāáǎàōóǒòūúǔùüǖǘǚǜēéěèńň,'-]+$");
+
+            QRegExp rx_zi(pattern_zi);
+            int pos_zi = str.indexOf(rx_zi);
+            if( pos_zi >= 0 ){
+                ZiYin = rx_zi.cap(2);
+                Zi = rx_zi.cap(1);
+            }else{
+                QRegExp rx_ci(pattern_ci);
+                int pos_ci = str.indexOf(rx_ci);
+
+                if( pos_ci >= 0){
+                    qDebug() << Ci;
+                }
+            }
+
+            Ci = str;
+        }
+
+        fdic.close();
+    }
 }
 
 void PreLearnWords::InitZi(){
@@ -23,7 +59,7 @@ void PreLearnWords::InitZi(){
             fdic.readLine(line,1024);
             QString str = QString::fromUtf8(line);
             if( str.startsWith("*")){
-                QString pattern("\\*(.*) ([abcdefghijklmnopqrstuvwxyzīíǐìāáǎàōóǒòūúǔùüǖǘǚǜēéěèńň,]*)笔划：(.*)部首：(.*)五笔输入法");
+                QString pattern("\\*(.*) ([abcdefghijklmnopqrstuvwxyzīíǐìāáǎàōóǒòūúǔùüǖǘǚǜēéěèńň,]*)笔划:(.*)部首:(.*)五笔输入法");
                 QRegExp rx(pattern);
 
                 int pos = str.indexOf(rx);

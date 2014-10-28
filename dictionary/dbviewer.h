@@ -5,8 +5,8 @@
 #include <QtWidgets/QTableView>
 #include <QtSql>
 
-#define APP_WIDTH   540
-#define APP_HEIGHT  600
+#define APP_WIDTH   640
+#define APP_HEIGHT  800
 #define APP_TOOLBAR_WIDTH   24
 namespace Ui {
 class DBViewer;

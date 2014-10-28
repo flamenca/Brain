@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mainToolBar ->addAction(openAction);
 
     QAction * listziAction = new QAction(tr("&Ci..."), this);
-    connect( listziAction,SIGNAL( triggered()),this,SLOT(OnListCi()) );
+    connect( listziAction,SIGNAL( triggered()),this,SLOT(OnInitCi()) );
     ui->mainToolBar ->addAction(listziAction);
 }
 
