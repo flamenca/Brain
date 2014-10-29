@@ -11,6 +11,75 @@ PreLearnWords::PreLearnWords()
 void PreLearnWords::InitCi(){
     char line[1024];
     QFile fdic("dic_utf8.txt");
+
+    QString Zi;
+    QStringList ZiYinList;
+    QString ZiYin;
+
+    QString Ci;
+    QString CiYin;
+
+    bool isciyin = false;
+    QString LastLine;
+
+    QStringList section;
+    section.clear();
+
+    if ( fdic.open( QIODevice::ReadOnly | QIODevice::Text ) ){
+        while( !fdic.atEnd() ){
+            memset((char *)line,0,1024);
+            fdic.readLine(line,1024);
+
+            QString str = QString::fromUtf8(line).trimmed();
+            QString pattern_zi("\\*(.*) ([abcdefghijklmnopqrstuvwxyzīíǐìāáǎàōóǒòūúǔùüǖǘǚǜēéěèńň,]*)笔划:(.*)部首:(.*)五笔输入法");
+            QString pattern_ci("(^[abcdefghijklmnopqrstuvwxyzīíǐìāáǎàōóǒòūúǔùüǖǘǚǜēéěèńň,'-]+)$");
+
+            QRegExp rx_zi(pattern_zi);
+            int pos_zi = str.indexOf(rx_zi);
+            if( pos_zi >= 0 ){
+                section.clear();
+                ZiYin = rx_zi.cap(2);
+                ZiYinList=ZiYin.split(",");
+                Zi = rx_zi.cap(1);
+            }else{
+                QRegExp rx_ci(pattern_ci);
+                int pos_ci = str.indexOf(rx_ci);
+
+                if( pos_ci >= 0){
+                    CiYin = rx_ci.cap(1).trimmed();
+                    QStringList::iterator i = qFind(ZiYinList.begin(),ZiYinList.end(),CiYin );
+                    if( ZiYin.contains(CiYin)){
+                        isciyin = true;
+                        Ci=Zi;
+                    }else{
+                        isciyin = true;
+                        Ci=LastLine;
+                    }
+                }else{
+                    if(isciyin){
+                        QString pattern_zixing("^【(.*)】");
+                        QRegExp rx_zixing(pattern_zixing);
+                        int pos_zixing = str.indexOf(rx_zixing);
+                        if(pos_zixing>=0){
+                            qDebug() << Ci << ":" << rx_zixing.cap(1);
+                        }
+                        isciyin = false;
+                    }
+                }
+            }
+
+            section.append(line);
+            LastLine = str;
+        }
+
+        fdic.close();
+    }
+}
+
+#if 0
+void PreLearnWords::InitCi(){
+    char line[1024];
+    QFile fdic("dic_utf8.txt");
     QFile fdic_out("dic_utf8_out.txt");
 
     QString Zi;
@@ -88,15 +157,6 @@ void PreLearnWords::InitCi(){
                             }
 
                         }
-                        /*
-                        QString pattern_zixing("【(.*)】");
-                        QRegExp rx_zixing(pattern_zixing);
-                        int pos_zixing = str.indexOf(rx_zixing);
-                        if(pos_zixing>=0){
-                            if(Ci.contains("解释:")){
-                                qDebug() << Ci << ":" << rx_zixing.cap(1);
-                            }
-                        }*/
                         isciyin = false;
                     }
                 }
@@ -113,6 +173,7 @@ void PreLearnWords::InitCi(){
         fdic.close();
     }
 }
+#endif
 
 void PreLearnWords::InitZi(){
     char line[1024];
