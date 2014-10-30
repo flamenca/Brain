@@ -15,11 +15,16 @@ void PreLearnWords::InitCi(){
     QString Zi;
     QStringList ZiYinList;
     QString ZiYin;
+    QString ZiXing;
 
     QString Ci;
     QString CiYin;
+    QString CiYi;
+    QString CiLi;
 
     bool isciyin = false;
+    bool isziyin = false;
+    int status = 0;
     QString LastLine;
 
     QStringList section;
@@ -41,29 +46,53 @@ void PreLearnWords::InitCi(){
                 ZiYin = rx_zi.cap(2);
                 ZiYinList=ZiYin.split(",");
                 Zi = rx_zi.cap(1);
+                status = 1;
+                isziyin = true;
+                isciyin = false;
             }else{
                 QRegExp rx_ci(pattern_ci);
                 int pos_ci = str.indexOf(rx_ci);
 
                 if( pos_ci >= 0){
                     CiYin = rx_ci.cap(1).trimmed();
-                    QStringList::iterator i = qFind(ZiYinList.begin(),ZiYinList.end(),CiYin );
                     if( ZiYin.contains(CiYin)){
-                        isciyin = true;
+                        isziyin = true;
+                        isciyin = false;
                         Ci=Zi;
                     }else{
                         isciyin = true;
+                        isziyin = false;
                         Ci=LastLine;
                     }
+                    status = 2;
+                    ZiXing = "";
+                    CiYi = "";
                 }else{
-                    if(isciyin){
+                    if( status >= 3){
+                        if( str.contains(Ci)){
+                            CiLi += str;
+                        }
+                        if(Ci.length() > 5)
+                        qDebug() << Ci << "|" << ZiXing << "|" << CiYin << "|" << CiYi ;//<< "|" << CiLi;
+
+                        if( status == 4) status = 0;
+                        if( status == 3) status = 2;
+                    }
+
+                    if(status >= 2){
                         QString pattern_zixing("^【(.*)】");
                         QRegExp rx_zixing(pattern_zixing);
                         int pos_zixing = str.indexOf(rx_zixing);
                         if(pos_zixing>=0){
-                            qDebug() << Ci << ":" << rx_zixing.cap(1);
+                            ZiXing =  rx_zixing.cap(1);
+                        }else{
+                            CiYi = str;
+                            if(str.contains("∶")){
+                                status = 3;
+                            }else{
+                                status = 4;
+                            }
                         }
-                        isciyin = false;
                     }
                 }
             }
