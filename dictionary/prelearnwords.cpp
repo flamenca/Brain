@@ -42,6 +42,10 @@ void PreLearnWords::InitCi(){
             QRegExp rx_zi(pattern_zi);
             int pos_zi = str.indexOf(rx_zi);
             if( pos_zi >= 0 ){
+                if( status == 3){
+                    //qDebug() << Ci << "|" << ZiXing << "|" << CiYin << "|" << CiYi ;//<< "|" << CiLi;
+                }
+
                 section.clear();
                 ZiYin = rx_zi.cap(2);
                 ZiYinList=ZiYin.split(",");
@@ -68,16 +72,6 @@ void PreLearnWords::InitCi(){
                     ZiXing = "";
                     CiYi = "";
                 }else{
-                    if( status >= 3){
-                        if( str.contains(Ci)){
-                            CiLi += str;
-                        }
-                        if(Ci.length() > 5)
-                        qDebug() << Ci << "|" << ZiXing << "|" << CiYin << "|" << CiYi ;//<< "|" << CiLi;
-
-                        if( status == 4) status = 0;
-                        if( status == 3) status = 2;
-                    }
 
                     if(status >= 2){
                         QString pattern_zixing("^【(.*)】");
@@ -86,11 +80,28 @@ void PreLearnWords::InitCi(){
                         if(pos_zixing>=0){
                             ZiXing =  rx_zixing.cap(1);
                         }else{
-                            CiYi = str;
-                            if(str.contains("∶")){
-                                status = 3;
-                            }else{
-                                status = 4;
+                            if(status == 2){
+                                CiYi = str;
+                                if(str.contains("∶")){
+                                    status = 3;
+                                    if(str.contains(":")){
+                                        QString liju = str.split(":").at(1);
+                                        liju.replace("～",Ci);
+                                        //qDebug() <<Ci << "|" << liju;
+                                    }
+                                }else{
+                                    qDebug() << Ci << "|" << ZiXing << "|" << CiYin << "|" << CiYi ;//<< "|" << CiLi;
+                                    status = 0;
+                                }
+                            }
+
+                            if( status == 3){
+                                CiYi = str;
+                                if(str.contains("∶")){
+                                    qDebug() << Ci << "|" << ZiXing << "|" << CiYin << "|" << CiYi ;//<< "|" << CiLi;
+                                }else{
+                                    CiLi=str;
+                                }
                             }
                         }
                     }
