@@ -18,6 +18,10 @@ MainWindow::MainWindow(QWidget *parent) :
     QAction * listziAction = new QAction(tr("&Ci..."), this);
     connect( listziAction,SIGNAL( triggered()),this,SLOT(OnInitCi()) );
     ui->mainToolBar ->addAction(listziAction);
+
+    QAction * qieciAction = new QAction(tr("&Qie..."), this);
+    connect( qieciAction,SIGNAL( triggered()),this,SLOT(OnQieCi()) );
+    ui->mainToolBar ->addAction(qieciAction);
 }
 
 MainWindow::~MainWindow()
@@ -31,5 +35,9 @@ void  MainWindow::OnInitZi(){
 
 void  MainWindow::OnInitCi(){
     PreLearnWords::InitCi();
+}
+
+void  MainWindow::OnQieCi(){
+
 }
 

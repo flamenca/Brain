@@ -8,6 +8,18 @@ PreLearnWords::PreLearnWords()
 {
 }
 
+void printci(QString Ci,QString ZiXing ,QString CiYin ,QString CiYi ,QString CiLi){
+    QStringList ciyinlist = CiYin.split(",");
+    QStringList cilist = Ci.split(",");
+
+    for(int i = 0 ; i < cilist.size() ; i ++){
+        if (cilist.at(i).length() > 0)
+        {
+            qDebug() << cilist.at(i) << "|" << ZiXing << "|" << ciyinlist.at(i) << "|" << CiYi << "|" << CiLi;
+        }
+    }
+}
+
 void PreLearnWords::InitCi(){
     char line[1024];
     QFile fdic("dic_utf8.txt");
@@ -43,7 +55,16 @@ void PreLearnWords::InitCi(){
             int pos_zi = str.indexOf(rx_zi);
             if( pos_zi >= 0 ){
                 if( status == 3){
-                    //qDebug() << Ci << "|" << ZiXing << "|" << CiYin << "|" << CiYi ;//<< "|" << CiLi;
+                    if(CiYi.contains("〔")){
+                        QString pattern_subci("^〔(.*)〕");
+                        QRegExp rx_subci(pattern_subci);
+                        int pos_subci = CiYi.indexOf(rx_subci);
+                        if(pos_subci >= 0){
+                            printci(Ci ,ZiXing ,CiYin ,CiYi,CiLi);
+                        }
+                    }else if(!CiYi.contains("笔画数:")){
+                        printci(Ci ,ZiXing ,CiYin ,CiYi,CiLi);
+                    }
                 }
 
                 section.clear();
@@ -71,6 +92,7 @@ void PreLearnWords::InitCi(){
                     status = 2;
                     ZiXing = "";
                     CiYi = "";
+                    CiLi = "";
                 }else{
 
                     if(status >= 2){
@@ -80,27 +102,60 @@ void PreLearnWords::InitCi(){
                         if(pos_zixing>=0){
                             ZiXing =  rx_zixing.cap(1);
                         }else{
-                            if(status == 2){
-                                CiYi = str;
+                            str.replace("～",Ci);
+                            if(status == 2){                               
                                 if(str.contains("∶")){
                                     status = 3;
-                                    if(str.contains(":")){
-                                        QString liju = str.split(":").at(1);
-                                        liju.replace("～",Ci);
-                                        //qDebug() <<Ci << "|" << liju;
-                                    }
                                 }else{
-                                    qDebug() << Ci << "|" << ZiXing << "|" << CiYin << "|" << CiYi ;//<< "|" << CiLi;
                                     status = 0;
+                                }
+                                if(str.contains(":")){
+                                    QStringList liju = str.split(":");
+                                    CiYi=liju.at(0);
+                                    if(liju.at(1).contains(Ci))
+                                        CiLi =liju.at(1);
+                                }else{
+                                    CiYi=str;
+                                }
+
+                                if( status == 0 ){
+                                    if(CiYi.contains("〔")){
+                                        QString pattern_subci("^〔(.*)〕");
+                                        QRegExp rx_subci(pattern_subci);
+                                        int pos_subci = CiYi.indexOf(rx_subci);
+                                        if(pos_subci >= 0){
+                                            printci(Ci ,ZiXing ,CiYin ,CiYi,CiLi);
+                                        }
+                                    }else if(!CiYi.contains("笔画数:")){
+                                        printci(Ci ,ZiXing ,CiYin ,CiYi,CiLi);
+                                    }
                                 }
                             }
 
                             if( status == 3){
-                                CiYi = str;
                                 if(str.contains("∶")){
-                                    qDebug() << Ci << "|" << ZiXing << "|" << CiYin << "|" << CiYi ;//<< "|" << CiLi;
+                                    if(str.contains(":")){
+                                        QStringList liju = str.split(":");
+                                        CiYi=liju.at(0);
+                                        if(liju.at(1).contains(Ci))
+                                            CiLi =liju.at(1);
+                                    }else{
+                                        CiYi=str;
+                                    }
+
+                                    if(CiYi.contains("〔")){
+                                        QString pattern_subci("^〔(.*)〕");
+                                        QRegExp rx_subci(pattern_subci);
+                                        int pos_subci = CiYi.indexOf(rx_subci);
+                                        if(pos_subci >= 0){
+                                            printci(Ci ,ZiXing ,CiYin ,CiYi,CiLi);
+                                        }
+                                    }else if(!CiYi.contains("笔画数:")){
+                                        printci(Ci ,ZiXing ,CiYin ,CiYi,CiLi);
+                                    }
                                 }else{
-                                    CiLi=str;
+                                    if(str.contains(Ci))
+                                        CiLi =str;
                                 }
                             }
                         }

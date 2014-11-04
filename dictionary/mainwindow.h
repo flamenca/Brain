@@ -24,6 +24,8 @@ private:
 public slots:
     void  OnInitZi();
     void  OnInitCi();
+
+    void  OnQieCi();
 };
 
 #endif // MAINWINDOW_H
